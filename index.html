@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deep Impact Studio — Un univers. Deux mondes. Une saga.</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --rouge: #FF1A1A;
+      --rouge-fonce: #CC0000;
+      --rouge-sombre: #8B0000;
+      --or: #C9A96E;
+      --cyan: #00D4FF;
+      --noir: #030303;
+      --noir-rouge: #0D0303;
+      --gris-fonce: #0A0505;
+      --blanc: #F0E8E8;
+      --blanc-froid: #C8B8B8;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--noir); color: var(--blanc); font-family: 'Rajdhani', sans-serif; font-weight: 300; overflow-x: hidden; cursor: none; }
+    .curseur { width: 6px; height: 6px; background: var(--rouge); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; box-shadow: 0 0 10px var(--rouge); }
+    .curseur-cercle { width: 28px; height: 28px; border: 1px solid var(--rouge); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9998; opacity: 0.5; transition: all 0.12s ease; }
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 1.5rem 4rem; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(to bottom, rgba(3,0,0,0.98), transparent); border-bottom: 1px solid rgba(255,26,26,0.08); }
+    .logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 0.2em; color: var(--blanc); }
+    .logo span { color: var(--rouge); }
+    .nav-liens { display: flex; gap: 3rem; list-style: none; }
+    .nav-liens a { color: var(--blanc-froid); text-decoration: none; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 500; opacity: 0.6; transition: opacity 0.3s, color 0.3s; }
+    .nav-liens a:hover { opacity: 1; color: var(--rouge); }
+    #accueil { height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+    .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse at 30% 40%, rgba(255,26,26,0.07) 0%, transparent 50%), radial-gradient(ellipse at 70% 70%, rgba(255,26,26,0.04) 0%, transparent 40%), linear-gradient(180deg, #030303 0%, #0D0303 50%, #030303 100%); }
+    .hero-grille { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,26,26,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,26,26,0.04) 1px, transparent 1px); background-size: 60px 60px; mask-image: radial-gradient(ellipse at center, black 20%, transparent 80%); }
+    .hero-contenu { text-align: center; z-index: 1; padding: 0 2rem; }
+    .hero-badge { display: inline-block; border: 1px solid rgba(255,26,26,0.4); padding: 0.4rem 1.5rem; font-size: 0.6rem; letter-spacing: 0.5em; text-transform: uppercase; color: var(--rouge); margin-bottom: 3rem; opacity: 0; animation: fadeInUp 0.8s ease 0.3s forwards; }
+    .hero-titre { font-family: 'Bebas Neue', sans-serif; font-size: clamp(4rem, 15vw, 12rem); letter-spacing: 0.05em; line-height: 0.85; margin-bottom: 2rem; opacity: 0; animation: fadeInUp 0.8s ease 0.6s forwards; }
+    .hero-titre .deep { color: var(--blanc); }
+    .hero-titre .impact { color: transparent; -webkit-text-stroke: 2px var(--rouge); text-shadow: 0 0 40px rgba(255,26,26,0.4); }
+    .hero-titre .studio { font-size: clamp(2rem, 6vw, 5rem); color: var(--blanc-froid); display: block; letter-spacing: 0.4em; opacity: 0.7; }
+    .hero-sous-titre { font-size: 0.8rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--blanc-froid); opacity: 0; animation: fadeInUp 0.8s ease 0.9s forwards; margin-bottom: 3rem; }
+    .hero-ctas { display: flex; gap: 1.5rem; justify-content: center; opacity: 0; animation: fadeInUp 0.8s ease 1.2s forwards; }
+    .btn-primaire { padding: 0.9rem 2.5rem; background: var(--rouge); color: var(--blanc); text-decoration: none; font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase; font-weight: 600; transition: all 0.3s ease; font-family: 'Rajdhani', sans-serif; }
+    .btn-primaire:hover { background: var(--rouge-fonce); box-shadow: 0 0 30px rgba(255,26,26,0.5); }
+    .btn-secondaire { padding: 0.9rem 2.5rem; border: 1px solid rgba(255,26,26,0.5); color: var(--rouge); text-decoration: none; font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase; transition: all 0.3s ease; font-family: 'Rajdhani', sans-serif; }
+    .btn-secondaire:hover { border-color: var(--rouge); background: rgba(255,26,26,0.08); }
+    .hero-scroll { position: absolute; bottom: 3rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 0.5rem; opacity: 0.3; }
+    .hero-scroll span { font-size: 0.55rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--rouge); }
+    .scroll-ligne { width: 1px; height: 50px; background: linear-gradient(to bottom, var(--rouge), transparent); animation: scrollDown 2s ease infinite; }
+    .section-label { font-size: 0.6rem; letter-spacing: 0.5em; text-transform: uppercase; color: var(--rouge); margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem; }
+    .section-label::before { content: ''; width: 30px; height: 1px; background: var(--rouge); }
+    #univers { padding: 8rem 4rem; background: var(--noir-rouge); position: relative; }
+    #univers::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(to right, transparent, var(--rouge), transparent); opacity: 0.3; }
+    .section-titre { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3rem, 7vw, 6rem); letter-spacing: 0.05em; line-height: 1; margin-bottom: 5rem; }
+    .section-titre span { color: var(--rouge); }
+    .personnages { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+    .personnage-card { border: 1px solid rgba(255,26,26,0.15); padding: 2.5rem; position: relative; transition: border-color 0.3s, transform 0.3s; background: rgba(255,26,26,0.02); }
+    .personnage-card:hover { border-color: rgba(255,26,26,0.5); transform: translateY(-5px); }
+    .personnage-card::before { content: ''; position: absolute; top: 0; left: 0; width: 40px; height: 2px; background: var(--rouge); transition: width 0.4s; }
+    .personnage-card:hover::before { width: 100%; }
+    .personnage-card.cyan-card::before { background: var(--cyan); }
+    .personnage-card.cyan-card { border-color: rgba(0,212,255,0.15); }
+    .personnage-card.cyan-card:hover { border-color: rgba(0,212,255,0.5); }
+    .personnage-card.or-card::before { background: var(--or); }
+    .personnage-card.or-card { border-color: rgba(201,169,110,0.15); }
+    .personnage-card.or-card:hover { border-color: rgba(201,169,110,0.5); }
+    .personnage-nom { font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; letter-spacing: 0.1em; margin-bottom: 0.5rem; color: var(--rouge); }
+    .personnage-card.cyan-card .personnage-nom { color: var(--cyan); }
+    .personnage-card.or-card .personnage-nom { color: var(--or); }
+    .personnage-role { font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase; opacity: 0.5; margin-bottom: 1.5rem; }
+    .personnage-desc { font-size: 0.85rem; line-height: 1.8; opacity: 0.6; }
+    #productions { padding: 8rem 4rem; background: var(--noir); }
+    .productions-grille { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: rgba(255,26,26,0.1); margin-top: 5rem; }
+    .production-item { background: var(--noir); padding: 3rem; position: relative; overflow: hidden; transition: background 0.3s; }
+    .production-item:hover { background: var(--noir-rouge); }
+    .production-numero { font-family: 'Bebas Neue', sans-serif; font-size: 5rem; color: var(--rouge); opacity: 0.06; position: absolute; top: 1rem; right: 2rem; line-height: 1; }
+    .production-nom { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 0.05em; margin-bottom: 1rem; }
+    .production-desc { font-size: 0.8rem; line-height: 1.9; opacity: 0.5; }
+    #casting { padding: 8rem 4rem; background: var(--noir-rouge); position: relative; overflow: hidden; text-align: center; }
+    #casting::before { content: 'INFINITY'; position: absolute; font-family: 'Bebas Neue', sans-serif; font-size: 20vw; color: transparent; -webkit-text-stroke: 1px rgba(255,26,26,0.06); top: 50%; left: 50%; transform: translate(-50%, -50%); white-space: nowrap; pointer-events: none; }
+    .casting-titre { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3rem, 8vw, 7rem); letter-spacing: 0.05em; line-height: 1; margin-bottom: 1.5rem; position: relative; z-index: 1; }
+    .casting-titre span { color: var(--rouge); }
+    .casting-sous-titre { font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.5; margin-bottom: 4rem; position: relative; z-index: 1; }
+    .casting-profil { display: flex; justify-content: center; gap: 4rem; margin-bottom: 4rem; position: relative; z-index: 1; flex-wrap: wrap; }
+    .profil-label { font-size: 0.55rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--rouge); margin-bottom: 0.5rem; opacity: 0.8; }
+    .profil-valeur { font-size: 0.85rem; opacity: 0.7; }
+    .casting-citation { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.2rem, 3vw, 2rem); font-style: italic; color: var(--blanc-froid); opacity: 0.6; margin-bottom: 3rem; max-width: 600px; margin-left: auto; margin-right: auto; position: relative; z-index: 1; line-height: 1.6; }
+    .casting-email { display: inline-block; font-family: 'Bebas Neue', sans-serif; font-size: clamp(1.2rem, 3vw, 2.5rem); letter-spacing: 0.1em; color: var(--rouge); text-decoration: none; border-bottom: 1px solid rgba(255,26,26,0.4); padding-bottom: 0.3rem; transition: all 0.3s; position: relative; z-index: 1; margin-bottom: 2rem; }
+    .casting-email:hover { border-color: var(--rouge); text-shadow: 0 0 20px rgba(255,26,26,0.6); }
+    .casting-details { font-size: 0.7rem; letter-spacing: 0.15em; opacity: 0.4; text-transform: uppercase; position: relative; z-index: 1; }
+    #contact { padding: 8rem 4rem; background: var(--noir); }
+    .contact-grille { display: grid; grid-template-columns: 1fr 1fr; gap: 8rem; align-items: center; }
+    .contact-titre { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3rem, 6vw, 5rem); letter-spacing: 0.05em; line-height: 1; margin-bottom: 2rem; }
+    .contact-titre span { color: var(--rouge); }
+    .contact-texte { font-size: 0.85rem; line-height: 2; opacity: 0.5; margin-bottom: 3rem; }
+    .contact-infos-liste { display: flex; flex-direction: column; gap: 2rem; }
+    .contact-info { display: flex; gap: 2rem; align-items: flex-start; border-left: 1px solid rgba(255,26,26,0.3); padding-left: 1.5rem; }
+    .contact-info-label { font-size: 0.55rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--rouge); opacity: 0.8; min-width: 80px; }
+    .contact-info-valeur { font-size: 0.9rem; opacity: 0.8; }
+    .contact-form { display: flex; flex-direction: column; gap: 1.5rem; }
+    .form-input { background: transparent; border: none; border-bottom: 1px solid rgba(255,26,26,0.2); padding: 1rem 0; color: var(--blanc); font-family: 'Rajdhani', sans-serif; font-size: 0.9rem; letter-spacing: 0.1em; outline: none; transition: border-color 0.3s; }
+    .form-input::placeholder { color: var(--blanc-froid); opacity: 0.3; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; }
+    .form-input:focus { border-color: var(--rouge); }
+    textarea.form-input { resize: none; height: 100px; }
+    .form-submit { padding: 1rem 3rem; background: transparent; border: 1px solid var(--rouge); color: var(--rouge); font-family: 'Rajdhani', sans-serif; font-size: 0.7rem; letter-spacing: 0.4em; text-transform: uppercase; cursor: none; transition: all 0.3s ease; align-self: flex-start; }
+    .form-submit:hover { background: var(--rouge); color: var(--blanc); box-shadow: 0 0 30px rgba(255,26,26,0.4); }
+    footer { padding: 2rem 4rem; border-top: 1px solid rgba(255,26,26,0.1); display: flex; justify-content: space-between; align-items: center; }
+    .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 0.2em; color: var(--rouge); }
+    .footer-copy { font-size: 0.6rem; letter-spacing: 0.2em; opacity: 0.2; text-transform: uppercase; }
+    .footer-lien { font-size: 0.6rem; letter-spacing: 0.2em; opacity: 0.2; text-transform: uppercase; text-decoration: none; color: var(--blanc); transition: opacity 0.3s, color 0.3s; }
+    .footer-lien:hover { opacity: 0.6; color: var(--or); }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes scrollDown { 0% { transform: scaleY(0); transform-origin: top; } 50% { transform: scaleY(1); transform-origin: top; } 51% { transform: scaleY(1); transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
+    @media (max-width: 768px) {
+      nav { padding: 1.5rem 2rem; }
+      .nav-liens { display: none; }
+      #univers, #productions, #casting, #contact { padding: 5rem 2rem; }
+      .personnages { grid-template-columns: 1fr; }
+      .productions-grille { grid-template-columns: 1fr; }
+      .contact-grille { grid-template-columns: 1fr; gap: 3rem; }
+      .hero-ctas { flex-direction: column; align-items: center; }
+      footer { flex-direction: column; gap: 1rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="curseur" id="curseur"></div>
+  <div class="curseur-cercle" id="curseurCercle"></div>
+  <nav>
+    <div class="logo">DEEP <span>IMPACT</span> STUDIO</div>
+    <ul class="nav-liens">
+      <li><a href="#univers">Univers</a></li>
+      <li><a href="#productions">Productions</a></li>
+      <li><a href="#casting">Casting</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+  <section id="accueil">
+    <div class="hero-bg"></div>
+    <div class="hero-grille"></div>
+    <div class="hero-contenu">
+      <div class="hero-badge">Studio Cinématique & Storytelling</div>
+      <h1 class="hero-titre">
+        <span class="deep">DEEP</span><br>
+        <span class="impact">IMPACT</span><br>
+        <span class="studio">STUDIO</span>
+      </h1>
+      <p class="hero-sous-titre">Un studio. Un univers. Une saga. — Paris & Île-de-France</p>
+      <div class="hero-ctas">
+        <a href="#univers" class="btn-primaire">Découvrir l'Univers</a>
+        <a href="#casting" class="btn-secondaire">Rejoindre le Casting</a>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <span>Défiler</span>
+      <div class="scroll-ligne"></div>
+    </div>
+  </section>
+  <section id="univers">
+    <div class="section-label">L'Univers</div>
+    <h2 class="section-titre">INFINITY VS<br><span>THE DESTRUCTOR</span></h2>
+    <div class="personnages">
+      <div class="personnage-card or-card">
+        <h3 class="personnage-nom">INFINITY</h3>
+        <p class="personnage-role">La Gardienne — Blanc & Or</p>
+        <p class="personnage-desc">Entité cosmique exilée sur Terre. Trois formes : Gardienne, Exilée, Guerrière. Elle marche parmi nous, invisible, en attente de son heure.</p>
+      </div>
+      <div class="personnage-card">
+        <h3 class="personnage-nom">NEXAR</h3>
+        <p class="personnage-role">Le Destructeur — Noir & Rouge</p>
+        <p class="personnage-desc">Possédé par Le Chaos. Ses yeux — baromètre de sa chute : cyan quand il résiste, rouge quand il est perdu. Une âme en guerre contre elle-même.</p>
+      </div>
+      <div class="personnage-card cyan-card">
+        <h3 class="personnage-nom">MARCUS</h3>
+        <p class="personnage-role">L'Élu — Noir & Cyan</p>
+        <p class="personnage-desc">Humain ressuscité par Infinity. Cinq états de transformation. Le pont entre deux mondes, porteur d'un destin qu'il n'a pas choisi.</p>
+      </div>
+    </div>
+  </section>
+  <section id="productions">
+    <div class="section-label">Productions</div>
+    <h2 class="section-titre">LÀ OÙ CHAQUE IMAGE<br>RACONTE <span>L'INVISIBLE</span></h2>
+    <div class="productions-grille">
+      <div class="production-item">
+        <div class="production-numero">01</div>
+        <h3 class="production-nom">Cinéma & Court-Métrage</h3>
+        <p class="production-desc">Production cinématique indépendante. De l'idée à l'écran — direction artistique, tournage, montage. L'image au service de la narration.</p>
+      </div>
+      <div class="production-item">
+        <div class="production-numero">02</div>
+        <h3 class="production-nom">Sport & Adrénaline</h3>
+        <p class="production-desc">Capturer la puissance en mouvement. Sports urbains, performances extrêmes, bolides. L'intensité du moment figée pour l'éternité.</p>
+      </div>
+      <div class="production-item">
+        <div class="production-numero">03</div>
+        <h3 class="production-nom">Reportage & Documentaire</h3>
+        <p class="production-desc">Le monde tel qu'il est, sublimé tel qu'il pourrait être. Histoires humaines, sociétés, territoires. La vérité comme matière première.</p>
+      </div>
+      <div class="production-item">
+        <div class="production-numero">04</div>
+        <h3 class="production-nom">Micro-Trottoir & Contenu</h3>
+        <p class="production-desc">La rue comme studio. Portraits spontanés, interviews urbaines, contenu digital percutant. L'authentique comme signature.</p>
+      </div>
+    </div>
+  </section>
+  <section id="casting">
+    <div class="section-label" style="justify-content: center;">Casting Ouvert</div>
+    <h2 class="casting-titre">INCARNER<br><span>INFINITY</span></h2>
+    <p class="casting-sous-titre">Paris & Île-de-France — Casting Principal CM1</p>
+    <div class="casting-profil">
+      <div class="profil-item">
+        <p class="profil-label">Cheveux</p>
+        <p class="profil-valeur">Longs</p>
+      </div>
+      <div class="profil-item">
+        <p class="profil-label">Style</p>
+        <p class="profil-valeur">À l'aise en talons</p>
+      </div>
+      <div class="profil-item">
+        <p class="profil-label">Localisation</p>
+        <p class="profil-valeur">Paris / IDF</p>
+      </div>
+      <div class="profil-item">
+        <p class="profil-label">Particularités</p>
+        <p class="profil-valeur">Sans piercing ni tatouage visibles</p>
+      </div>
+    </div>
+    <p class="casting-citation">"Ce n'est pas ton apparence qui nous intéresse. C'est ce que tu dégages."</p>
+    <br>
+    <a href="mailto:casting@deepimpactstudio.fr" class="casting-email">casting@deepimpactstudio.fr</a>
+    <br><br>
+    <p class="casting-details">Dossier : 10 photos + 2 vidéos — Visuels professionnels libres de droits · Crédit · Rôle principal</p>
+  </section>
+  <section id="contact">
+    <div class="section-label">Contact</div>
+    <div class="contact-grille">
+      <div>
+        <h2 class="contact-titre">PARLONS DE<br>VOTRE <span>PROJET</span></h2>
+        <p class="contact-texte">Chaque collaboration commence par une conversation. Productions cinématiques, contenu sport, reportage — contactez-nous.</p>
+        <div class="contact-infos-liste">
+          <div class="contact-info">
+            <span class="contact-info-label">Email</span>
+            <span class="contact-info-valeur">contact@deepimpactstudio.fr</span>
+          </div>
+          <div class="contact-info">
+            <span class="contact-info-label">Instagram</span>
+            <span class="contact-info-valeur">@deepimpactstudio</span>
+          </div>
+          <div class="contact-info">
+            <span class="contact-info-label">Zone</span>
+            <span class="contact-info-valeur">Paris & Île-de-France</span>
+          </div>
+        </div>
+      </div>
+      <div class="contact-form">
+        <input type="text" class="form-input" placeholder="Votre nom">
+        <input type="email" class="form-input" placeholder="Votre email">
+        <input type="text" class="form-input" placeholder="Sujet">
+        <textarea class="form-input" placeholder="Votre message"></textarea>
+        <button class="form-submit">Envoyer le message</button>
+      </div>
+    </div>
+  </section>
+  <footer>
+    <div class="footer-logo">DEEP IMPACT STUDIO</div>
+    <p class="footer-copy">© 2026 — Tous droits réservés</p>
+    <a href="https://adilassesejour-mp.github.io" class="footer-lien">MP Studio Infinity →</a>
+  </footer>
+  <script>
+    const curseur = document.getElementById('curseur');
+    const curseurCercle = document.getElementById('curseurCercle');
+    document.addEventListener('mousemove', (e) => {
+      curseur.style.left = e.clientX - 3 + 'px';
+      curseur.style.top = e.clientY - 3 + 'px';
+      curseurCercle.style.left = e.clientX - 14 + 'px';
+      curseurCercle.style.top = e.clientY - 14 + 'px';
+    });
+    document.querySelectorAll('a, button').forEach(el => {
+      el.addEventListener('mouseenter', () => { curseur.style.transform = 'scale(3)'; curseurCercle.style.opacity = '1'; });
+      el.addEventListener('mouseleave', () => { curseur.style.transform = 'scale(1)'; curseurCercle.style.opacity = '0.5'; });
+    });
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) { entry.target.style.opacity = '1'; entry.target.style.transform = 'translateY(0)'; }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.personnage-card, .production-item').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = 'opacity 0.8s ease, transform 0.8s ease, border-color 0.3s, background 0.3s';
+      observer.observe(el);
+    });
+  </script>
+</body>
+</html>
